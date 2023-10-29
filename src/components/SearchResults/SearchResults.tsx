@@ -16,7 +16,7 @@ export default class SearchResults extends Component<SearchResultsProps> {
     return (
       <section className="search-section">
         <h2 className="search-results">Search Results</h2>
-        {!loading && searchResults.length > 0 ? (
+        {!loading ? (
           <Characters characters={searchResults} />
         ) : (
           <LoadingSpinner />

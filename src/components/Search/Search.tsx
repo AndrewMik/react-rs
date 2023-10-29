@@ -35,7 +35,7 @@ export default class Search extends Component {
         });
       }
       const results: Character[] = await searchCharacters(searchString);
-      this.setState({ searchResults: results });
+      this.setState({ searchResults: results, loading: false });
     } finally {
       this.setState({ loading: false });
     }
@@ -43,15 +43,16 @@ export default class Search extends Component {
 
   handleSearch = async () => {
     const { searchString, userInputString } = this.state;
+    const userSearchTerm = userInputString.trim();
 
-    if (searchString === userInputString) return;
+    if (searchString === userSearchTerm) return;
 
-    this.setState({ searchString: userInputString, loading: true });
+    this.setState({ searchString: userSearchTerm, loading: true });
 
-    const results = await searchCharacters(userInputString);
+    const results = await searchCharacters(userSearchTerm);
 
     this.setState({ searchResults: results, loading: false });
-    localStorage.setItem('searchString', userInputString);
+    localStorage.setItem('searchString', userSearchTerm);
   };
 
   throwError = () => {
