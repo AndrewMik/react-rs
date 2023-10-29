@@ -25,7 +25,14 @@ export default class Search extends Component {
 
   loadInitialData = async () => {
     try {
-      const results: Character[] = await searchCharacters();
+      const searchString = localStorage.getItem('searchString') || '';
+      if (searchString) {
+        this.setState({
+          searchString: searchString,
+          userInputString: searchString,
+        });
+      }
+      const results: Character[] = await searchCharacters(searchString);
       this.setState({ searchResults: results });
     } finally {
       this.setState({ loading: false });
