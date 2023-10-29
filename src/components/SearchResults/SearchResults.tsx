@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import './style.css';
-import { getCharacters } from '../../api/getPeople';
+import { getCharacters } from '../../api/getCharacters';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 import Characters, { Character } from '../Characters/Characters';
 
