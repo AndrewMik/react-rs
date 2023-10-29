@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import './style.css';
 import { getCharacters } from '../../api/getPeople';
-import { Hourglass } from 'react-loader-spinner';
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 
 type Characters = {
   searchResults: Character[];
@@ -55,15 +55,7 @@ export default class SearchResults extends Component {
           ))}
         </ul>
       ) : (
-        <Hourglass
-          visible={true}
-          height="80"
-          width="80"
-          ariaLabel="hourglass-loading"
-          wrapperStyle={{}}
-          wrapperClass=""
-          colors={['#d7bf77', '#d7bf77']}
-        />
+        <LoadingSpinner />
       )}
     </section>;
   }
