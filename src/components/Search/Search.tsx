@@ -51,10 +51,15 @@ export default class Search extends Component {
 
     this.setState({ searchString: userSearchTerm, loading: true });
 
-    const results = await searchCharacters(userSearchTerm);
+    try {
+      const results = await searchCharacters(userSearchTerm);
 
-    this.setState({ searchResults: results, loading: false });
-    localStorage.setItem('searchString', userSearchTerm);
+      this.setState({ searchResults: results, loading: false });
+      localStorage.setItem('searchString', userSearchTerm);
+    } catch (error) {
+      this.setState({ loading: false });
+      console.log(error);
+    }
   };
 
   throwError = () => {
@@ -62,8 +67,9 @@ export default class Search extends Component {
   };
 
   render() {
-    if (this.state.error)
+    if (this.state.error) {
       throw new Error('A custom Error occurred for RS School.');
+    }
     return (
       <>
         <section className="search">
