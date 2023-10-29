@@ -36,6 +36,8 @@ export default class Search extends Component {
       }
       const results: Character[] = await searchCharacters(searchString);
       this.setState({ searchResults: results, loading: false });
+    } catch (error) {
+      console.log(error);
     } finally {
       this.setState({ loading: false });
     }
