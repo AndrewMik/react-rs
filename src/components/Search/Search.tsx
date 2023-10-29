@@ -59,7 +59,8 @@ export default class Search extends Component {
   };
 
   render() {
-    if (this.state.error) throw new Error('A custom Error occurred for RS School.');
+    if (this.state.error)
+      throw new Error('A custom Error occurred for RS School.');
     return (
       <>
         <section className="search">
@@ -75,7 +76,9 @@ export default class Search extends Component {
             ></input>
             <button onClick={this.handleSearch}>Search</button>
           </div>
-          <button className="error-button" onClick={this.throwError}>Throw an Error</button>
+          <button className="error-button" onClick={this.throwError}>
+            Throw an Error
+          </button>
         </section>
         <SearchResults
           searchResults={this.state.searchResults}

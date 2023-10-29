@@ -32,8 +32,13 @@ class ErrorBoundary extends Component<Props, State> {
             <h2 className="heading">Something went wrong.</h2>
           </div>
           <div className="search-section">
-            <button className="button restart-button" onClick={() => location.reload()}>Click here to restart</button>
-          </div >
+            <button
+              className="button restart-button"
+              onClick={() => location.reload()}
+            >
+              Click here to restart
+            </button>
+          </div>
         </>
       );
     }
