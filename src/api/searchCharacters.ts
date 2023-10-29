@@ -1,6 +1,6 @@
-export async function searchCharacters(searchString?: string) {
+export async function searchCharacters(searchString?: string, error?: string) {
   const response = await fetch(
-    `https://swapi.dev/api/people${
+    `https://swapi.dev/api/people${error ? error : ''}${
       searchString ? '/?search=' + searchString : ''
     }`
   );

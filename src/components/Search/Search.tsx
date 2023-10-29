@@ -9,6 +9,7 @@ type SearchState = {
   searchString: string;
   userInputString: string;
   loading: boolean;
+  error: Error | null;
 };
 
 export default class Search extends Component {
@@ -17,6 +18,7 @@ export default class Search extends Component {
     searchString: '',
     userInputString: '',
     loading: true,
+    error: null,
   };
 
   componentDidMount() {
@@ -52,17 +54,28 @@ export default class Search extends Component {
     localStorage.setItem('searchString', userInputString);
   };
 
+  throwError = () => {
+    this.setState({ error: new Error() });
+  };
+
   render() {
+    if (this.state.error) throw new Error('A custom Error occurred for RS School.');
     return (
       <>
         <section className="search">
-          <input
-            type="text"
-            value={this.state.userInputString}
-            onChange={(e) => this.setState({ userInputString: e.target.value })}
-            placeholder="Search characters"
-          ></input>
-          <button onClick={this.handleSearch}>Search</button>
+          <h1 className="heading">Star Wars Character Search</h1>
+          <div className="search-container">
+            <input
+              type="text"
+              value={this.state.userInputString}
+              onChange={(e) =>
+                this.setState({ userInputString: e.target.value })
+              }
+              placeholder="Search characters"
+            ></input>
+            <button onClick={this.handleSearch}>Search</button>
+          </div>
+          <button className="error-button" onClick={this.throwError}>Throw an Error</button>
         </section>
         <SearchResults
           searchResults={this.state.searchResults}

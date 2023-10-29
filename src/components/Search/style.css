@@ -4,4 +4,21 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+}
+
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.heading {
+  color: #442f12;
+}
+
+.error-button {
+  background-color: #442f12;
+  padding: 3px 6px;
+  margin-top: 10px;
 }
