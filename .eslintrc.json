@@ -21,12 +21,17 @@
     "node": true
   },
   "plugins": [
-    "@typescript-eslint", "react", "react-hooks"
+    "@typescript-eslint",
+    "react",
+    "react-hooks"
   ],
   "rules": {
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
-    "comma-dangle": ["error", "only-multiline"],
+    "comma-dangle": [
+      "error",
+      "only-multiline"
+    ],
     "react/prop-types": "off",
     "react/display-name": "off",
     "@typescript-eslint/interface-name-prefix": "off",
@@ -39,6 +44,9 @@
     "react/jsx-uses-react": "off",
     "react/react-in-jsx-scope": "off"
   },
+  "ignorePatterns": [
+    "**/*.html"
+  ],
   "settings": {
     "react": {
       "pragma": "React",
