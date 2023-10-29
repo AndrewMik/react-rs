@@ -2,25 +2,17 @@ import { Component } from 'react';
 import './style.css';
 import { getCharacters } from '../../api/getPeople';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
+import Characters, { Character } from '../Characters/Characters';
 
-type Characters = {
+type SearchResultsState = {
   searchResults: Character[];
-}
-
-type Character = {
-  name: string;
-  height: number,
-  mass: number,
-  hair_color: string,
-  skin_color: string,
-  eye_color: string,
-  birth_year: string,
-  gender: string,
+  loading: boolean;
 }
 
 export default class SearchResults extends Component {
-  state: Characters = {
+  state: SearchResultsState = {
     searchResults: [],
+    loading: true,
   };
 
   componentDidMount() {
@@ -28,8 +20,13 @@ export default class SearchResults extends Component {
   }
 
   loadInitialData = async () => {
-    const results: Character[] = await getCharacters();
-    this.setState({ searchResults: results });
+    try {
+      const results: Character[] = await getCharacters();
+      this.setState({ searchResults: results });
+    }
+    finally {
+      this.setState({ loading: false });
+    }
   }
 
   render() {
@@ -37,23 +34,8 @@ export default class SearchResults extends Component {
 
     return <section className='search-section'>
       <h2 className='search-results'>Search Results</h2>
-      {searchResults.length > 0 ? (
-        <ul className='cards'>
-          {searchResults.map((character: Character) => (
-            <li key={character.name} className='card'>
-              <h3 className='character-name'>{character.name}</h3>
-              <div className='description'>
-                <div>Height: {character.height}</div>
-                <div>Mass: {character.mass}</div>
-                <div>Hair color: {character.hair_color}</div>
-                <div>Skin color: {character.skin_color}</div>
-                <div>Eye color: {character.eye_color}</div>
-                <div>Birth year: {character.birth_year}</div>
-                <div>Gender: {character.gender}</div>
-              </div>
-            </li>
-          ))}
-        </ul>
+      {!this.state.loading && searchResults.length > 0 ? (
+        <Characters characters={searchResults} />
       ) : (
         <LoadingSpinner />
       )}
