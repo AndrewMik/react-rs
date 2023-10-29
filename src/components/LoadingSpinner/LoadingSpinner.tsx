@@ -1,4 +1,4 @@
-import { Component } from 'react'
+import { Component } from 'react';
 import './style.css';
 
 export default class LoadingSpinner extends Component {
@@ -7,6 +7,6 @@ export default class LoadingSpinner extends Component {
       <div className="spinner-container">
         <div className="loading-spinner"></div>
       </div>
-    )
+    );
   }
 }
