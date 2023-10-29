@@ -14,8 +14,8 @@ type SearchState = {
 export default class Search extends Component {
   state: SearchState = {
     searchResults: [],
-    searchString: "",
-    userInputString: "",
+    searchString: '',
+    userInputString: '',
     loading: true,
   };
 
@@ -40,9 +40,9 @@ export default class Search extends Component {
     this.setState({ searchString: userInputString, loading: true });
 
     const results = await searchCharacters(userInputString);
-    
+
     this.setState({ searchResults: results, loading: false });
-    localStorage.setItem("searchString", userInputString);
+    localStorage.setItem('searchString', userInputString);
   };
 
   render() {
@@ -57,7 +57,10 @@ export default class Search extends Component {
           ></input>
           <button onClick={this.handleSearch}>Search</button>
         </section>
-        <SearchResults searchResults={this.state.searchResults} loading={this.state.loading} />
+        <SearchResults
+          searchResults={this.state.searchResults}
+          loading={this.state.loading}
+        />
       </>
     );
   }
