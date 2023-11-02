@@ -1,4 +1,3 @@
-import { Component } from 'react';
 import './style.css';
 
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
@@ -9,19 +8,17 @@ type SearchResultsProps = {
   loading: boolean;
 };
 
-export default class SearchResults extends Component<SearchResultsProps> {
-  render() {
-    const { searchResults, loading } = this.props;
+const SearchResults: React.FC<SearchResultsProps> = ({ searchResults, loading }) => {
+  return (
+    <section className="search-section">
+      <h2 className="search-results">Search Results</h2>
+      {!loading ? (
+        <Characters characters={searchResults} />
+      ) : (
+        <LoadingSpinner />
+      )}
+    </section>
+  );
+};
 
-    return (
-      <section className="search-section">
-        <h2 className="search-results">Search Results</h2>
-        {!loading ? (
-          <Characters characters={searchResults} />
-        ) : (
-          <LoadingSpinner />
-        )}
-      </section>
-    );
-  }
-}
+export default SearchResults;
