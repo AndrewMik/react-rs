@@ -9,7 +9,7 @@ export async function searchCharacters(searchString?: string) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
     const data = await response.json();
-    return data.results;
+    return data;
   } catch (error) {
     console.error('An error occurred:', error);
     return [];

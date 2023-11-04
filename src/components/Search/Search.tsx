@@ -1,8 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import './style.css';
 import SearchResults from '../SearchResults/SearchResults';
 import { searchCharacters } from '../../api/searchCharacters';
 import { Character } from '../Characters/Characters';
+
+type SearchCharactersResponse = {
+  results: Character[];
+  count: number;
+};
 
 const Search: React.FC = () => {
   const [searchResults, setSearchResults] = useState<Character[]>([]);
@@ -10,21 +15,29 @@ const Search: React.FC = () => {
   const [userInputString, setUserInputString] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [count, setCount] = useState<number>(0);
+  const [itemsLimit] = useState<number>(10);
+
+  const changePage = (page: number): void => {
+    setCurrentPage(page);
+  };
 
   const loadInitialData = async () => {
-    let results: Character[];
+    let response: SearchCharactersResponse;
     const storedSearchString = localStorage.getItem('searchString') || '';
 
     try {
       if (storedSearchString) {
         setSearchString(storedSearchString);
         setUserInputString(storedSearchString);
-        results = await searchCharacters(storedSearchString);
+        response = await searchCharacters(storedSearchString);
       } else {
-        results = await searchCharacters(searchString);
+        response = await searchCharacters(searchString);
       }
 
-      setSearchResults(results);
+      setSearchResults(response.results);
+      setCount(response.count);
     } catch (error) {
       console.log(error);
     } finally {
@@ -45,9 +58,11 @@ const Search: React.FC = () => {
     setLoading(true);
 
     try {
-      const results: Character[] = await searchCharacters(userSearchTerm);
+      const response: SearchCharactersResponse =
+        await searchCharacters(userSearchTerm);
 
-      setSearchResults(results);
+      setSearchResults(response.results);
+      setCount(response.count);
       setSearchString(userSearchTerm);
       localStorage.setItem('searchString', userSearchTerm);
     } catch (error) {
@@ -82,7 +97,14 @@ const Search: React.FC = () => {
           Throw an Error
         </button>
       </section>
-      <SearchResults searchResults={searchResults} loading={loading} />
+      <SearchResults
+        searchResults={searchResults}
+        currentPage={currentPage}
+        count={count}
+        itemsLimit={itemsLimit}
+        loading={loading}
+        changePage={changePage}
+      />
     </>
   );
 };
