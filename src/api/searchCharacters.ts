@@ -1,10 +1,8 @@
-export async function searchCharacters(searchString?: string) {
+export async function searchCharacters(searchString?: string, page?: number) {
   try {
-    const response = await fetch(
-      `https://swapi.dev/api/people${
-        searchString ? '/?search=' + searchString : ''
-      }`
-    );
+    const query = buildQueryString(searchString, page);
+
+    const response = await fetch(`https://swapi.dev/api/people${query}`);
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
@@ -15,3 +13,19 @@ export async function searchCharacters(searchString?: string) {
     return [];
   }
 }
+
+const buildQueryString = (searchString?: string, page?: number): string => {
+  const query: string[] = [];
+
+  if (searchString) {
+    query.push(`search=${searchString}`);
+  }
+
+  if (page) {
+    query.push(`page=${page.toString()}`);
+  }
+
+  const result = query.join('&');
+
+  return result ? `/?${result}` : '';
+};

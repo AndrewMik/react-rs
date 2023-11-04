@@ -9,18 +9,39 @@ type SearchCharactersResponse = {
   count: number;
 };
 
+enum ItemsLimit {
+  TenItemsPerPage = 10,
+  FiveItemsPerPage = 5,
+}
+
+const FIRST_PAGE = 1;
+
 const Search: React.FC = () => {
   const [searchResults, setSearchResults] = useState<Character[]>([]);
   const [searchString, setSearchString] = useState<string>('');
   const [userInputString, setUserInputString] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [count, setCount] = useState<number>(0);
-  const [itemsLimit] = useState<number>(10);
+  const [currentPage, setCurrentPage] = useState<number>(FIRST_PAGE);
+  const [count, setCount] = useState<number | null>(null);
+  const [itemsLimit] = useState<number>(ItemsLimit.TenItemsPerPage);
 
-  const changePage = (page: number): void => {
+  const changePage = async (page: number): Promise<void> => {
+    if (currentPage === page) return;
+
+    setLoading(true);
     setCurrentPage(page);
+
+    try {
+      const response = await searchCharacters(searchString, page);
+
+      setSearchResults(response.results);
+      setCount(response.count);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const loadInitialData = async () => {
@@ -56,6 +77,7 @@ const Search: React.FC = () => {
     if (searchString === userSearchTerm) return;
 
     setLoading(true);
+    setCurrentPage(FIRST_PAGE);
 
     try {
       const response: SearchCharactersResponse =
@@ -100,7 +122,7 @@ const Search: React.FC = () => {
       <SearchResults
         searchResults={searchResults}
         currentPage={currentPage}
-        count={count}
+        count={count ?? 0}
         itemsLimit={itemsLimit}
         loading={loading}
         changePage={changePage}
