@@ -1,99 +1,90 @@
-import { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import './style.css';
 import SearchResults from '../SearchResults/SearchResults';
 import { searchCharacters } from '../../api/searchCharacters';
 import { Character } from '../Characters/Characters';
 
-type SearchState = {
-  searchResults: Character[];
-  searchString: string;
-  userInputString: string;
-  loading: boolean;
-  error: Error | null;
-};
+const Search: React.FC = () => {
+  const [searchResults, setSearchResults] = useState<Character[]>([]);
+  const [searchString, setSearchString] = useState<string>('');
+  const [userInputString, setUserInputString] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<Error | null>(null);
 
-export default class Search extends Component {
-  state: SearchState = {
-    searchResults: [],
-    searchString: '',
-    userInputString: '',
-    loading: true,
-    error: null,
-  };
+  const loadInitialData = async () => {
+    let results: Character[];
+    const storedSearchString = localStorage.getItem('searchString') || '';
 
-  componentDidMount() {
-    this.loadInitialData();
-  }
-
-  loadInitialData = async () => {
     try {
-      const searchString = localStorage.getItem('searchString') || '';
-      if (searchString) {
-        this.setState({
-          searchString: searchString,
-          userInputString: searchString,
-        });
+      if (storedSearchString) {
+        setSearchString(storedSearchString);
+        setUserInputString(storedSearchString);
+        results = await searchCharacters(storedSearchString);
+      } else {
+        results = await searchCharacters(searchString);
       }
-      const results: Character[] = await searchCharacters(searchString);
-      this.setState({ searchResults: results, loading: false });
+
+      setSearchResults(results);
     } catch (error) {
       console.log(error);
     } finally {
-      this.setState({ loading: false });
+      setLoading(false);
     }
   };
 
-  handleSearch = async () => {
-    const { searchString, userInputString } = this.state;
+  useEffect(() => {
+    loadInitialData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleSearch = async () => {
     const userSearchTerm = userInputString.trim();
 
     if (searchString === userSearchTerm) return;
 
-    this.setState({ searchString: userSearchTerm, loading: true });
+    setLoading(true);
 
     try {
-      const results = await searchCharacters(userSearchTerm);
+      const results: Character[] = await searchCharacters(userSearchTerm);
 
-      this.setState({ searchResults: results, loading: false });
+      setSearchResults(results);
+      setSearchString(userSearchTerm);
       localStorage.setItem('searchString', userSearchTerm);
     } catch (error) {
-      this.setState({ loading: false });
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  throwError = () => {
-    this.setState({ error: new Error() });
+  const throwError = () => {
+    setError(new Error());
   };
 
-  render() {
-    if (this.state.error) {
-      throw new Error('A custom Error occurred for RS School.');
-    }
-    return (
-      <>
-        <section className="search">
-          <h1 className="heading">Star Wars Character Search</h1>
-          <div className="search-container">
-            <input
-              type="text"
-              value={this.state.userInputString}
-              onChange={(e) =>
-                this.setState({ userInputString: e.target.value })
-              }
-              placeholder="Search characters"
-            ></input>
-            <button onClick={this.handleSearch}>Search</button>
-          </div>
-          <button className="error-button" onClick={this.throwError}>
-            Throw an Error
-          </button>
-        </section>
-        <SearchResults
-          searchResults={this.state.searchResults}
-          loading={this.state.loading}
-        />
-      </>
-    );
+  if (error) {
+    throw new Error('A custom Error occurred for RS School.');
   }
-}
+
+  return (
+    <>
+      <section className="search">
+        <h1 className="heading">Star Wars Character Search</h1>
+        <div className="search-container">
+          <input
+            type="text"
+            value={userInputString}
+            onChange={(e) => setUserInputString(e.target.value)}
+            placeholder="Search characters"
+          ></input>
+          <button onClick={handleSearch}>Search</button>
+        </div>
+        <button className="error-button" onClick={throwError}>
+          Throw an Error
+        </button>
+      </section>
+      <SearchResults searchResults={searchResults} loading={loading} />
+    </>
+  );
+};
+
+export default Search;
