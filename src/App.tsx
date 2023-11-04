@@ -9,14 +9,17 @@ import {
 import { Route as RoutePath } from './routes';
 
 const router = createBrowserRouter(
-  createRoutesFromElements(<Route path={RoutePath.Home} element={<Search />} />)
+  createRoutesFromElements(
+    <Route
+      path={RoutePath.Home}
+      element={<Search />}
+      errorElement={<ErrorBoundary />}
+    />
+  )
 );
+
 const App: React.FC = () => {
-  return (
-    <ErrorBoundary>
-      <RouterProvider router={router}></RouterProvider>
-    </ErrorBoundary>
-  );
+  return <RouterProvider router={router} />;
 };
 
 export default App;
