@@ -8,7 +8,10 @@ type SearchResultsProps = {
   loading: boolean;
 };
 
-const SearchResults: React.FC<SearchResultsProps> = ({ searchResults, loading }) => {
+const SearchResults: React.FC<SearchResultsProps> = ({
+  searchResults,
+  loading,
+}) => {
   return (
     <section className="search-section">
       <h2 className="search-results">Search Results</h2>
