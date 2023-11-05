@@ -24,3 +24,19 @@
   height: 100vh;
   justify-content: center;
 }
+
+.details-left-side {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 60vw;
+  height: 100vh;
+  background-color: transparent;
+}
+
+.close-description {
+  border-radius: 50%;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
