@@ -4,9 +4,15 @@ import SearchResults from '../SearchResults/SearchResults';
 import { searchCharacters } from '../../api/searchCharacters';
 import { Character } from '../Characters/Characters';
 import SearchSection from '../SearchSection/SearchSection';
-import { Outlet, useNavigate, useSearchParams } from 'react-router-dom';
+import {
+  Outlet,
+  useNavigate,
+  useNavigation,
+  useSearchParams,
+} from 'react-router-dom';
 import { ItemsLimit } from '../../types/enum';
 import { Route } from '../../routes';
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 
 export type SearchCharactersResponse = {
   results: Character[];
@@ -28,6 +34,7 @@ const Search: React.FC = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
+  const navigation = useNavigation();
 
   const getSearchResults = async (
     searchTerm: string,
@@ -139,15 +146,23 @@ const Search: React.FC = () => {
         setItemsLimit={setItemsLimit}
         handleItemsPerPageChange={handleItemsPerPageChange}
       />
-      <SearchResults
-        searchResults={searchResults}
-        currentPage={currentPage}
-        count={count}
-        itemsLimit={itemsLimit}
-        loading={loading}
-        changePage={changePage}
-      />
-      <Outlet />
+      {navigation.state === 'loading' ? (
+        <div className="global-spinner-container">
+          <LoadingSpinner />
+        </div>
+      ) : (
+        <>
+          <SearchResults
+            searchResults={searchResults}
+            currentPage={currentPage}
+            count={count}
+            itemsLimit={itemsLimit}
+            loading={loading}
+            changePage={changePage}
+          />
+          <Outlet />
+        </>
+      )}
     </>
   );
 };

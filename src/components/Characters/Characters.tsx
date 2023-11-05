@@ -31,9 +31,9 @@ const Characters: React.FC<CharactersProps> = ({ characters }) => {
           <NavLink
             to={`${getCharacterId(character.url)}`}
             key={getCharacterId(character.url)}
-            onClick={() =>
-              localStorage.setItem('searchParams', searchParams.toString())
-            }
+            onClick={() => {
+              localStorage.setItem('searchParams', searchParams.toString());
+            }}
           >
             <div className="card-container">
               <div key={character.name} className="card">

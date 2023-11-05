@@ -1,21 +1,15 @@
-import { useNavigate, useNavigation } from 'react-router';
+import { useNavigate } from 'react-router';
 import './style.css';
 import CharacterDescription from '../CharacterDescription/CharacterDescription';
-import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Route } from '../../routes';
 import { useSearchParams } from 'react-router-dom';
 
 const Details: React.FC = () => {
   const [isVisible, setIsVisible] = useState<boolean>(true);
-  const navigation = useNavigation();
   const navigate = useNavigate();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [searchParams, setSearchParams] = useSearchParams();
-
-  useEffect(() => {
-    setIsVisible(true);
-  }, [navigation]);
 
   const closeHandler = () => {
     setIsVisible(false);
@@ -33,11 +27,7 @@ const Details: React.FC = () => {
               <button className="close-description" onClick={closeHandler}>
                 x
               </button>
-              {navigation.state === 'loading' ? (
-                <LoadingSpinner />
-              ) : (
-                <CharacterDescription />
-              )}
+              <CharacterDescription />
             </div>
           </section>
         </>
