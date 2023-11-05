@@ -23,6 +23,11 @@ const router = createBrowserRouter(
         loader={async ({ params }) => {
           return getCharacter(params);
         }}
+        errorElement={<ErrorBoundary />}
+      ></Route>
+      <Route
+        path="*"
+        element={<ErrorBoundary />}
       ></Route>
     </Route>
   )
