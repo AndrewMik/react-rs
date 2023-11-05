@@ -4,8 +4,9 @@ import SearchResults from '../SearchResults/SearchResults';
 import { searchCharacters } from '../../api/searchCharacters';
 import { Character } from '../Characters/Characters';
 import SearchSection from '../SearchSection/SearchSection';
-import { Outlet, useSearchParams } from 'react-router-dom';
+import { Outlet, redirect, useSearchParams } from 'react-router-dom';
 import { ItemsLimit } from '../../types/enum';
+import { Route } from '../../routes';
 
 export type SearchCharactersResponse = {
   results: Character[];
@@ -119,6 +120,8 @@ const Search: React.FC = () => {
   const handleItemsPerPageChange = (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
+    redirect(Route.Home);
+    setSearchParams('');
     setItemsLimit(+event.target.value);
     getSearchResults(searchString, currentPage, +event.target.value);
   };
