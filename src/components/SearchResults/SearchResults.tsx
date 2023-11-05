@@ -8,9 +8,9 @@ type SearchResultsProps = {
   searchResults: Character[];
   loading: boolean;
   currentPage: number;
-  count: number;
+  count: number | null;
   itemsLimit: number;
-  changePage: (page: number) => void;
+  changePage: (page: number) => Promise<void>;
 };
 
 const SearchResults: React.FC<SearchResultsProps> = ({

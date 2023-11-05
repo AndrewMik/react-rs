@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import './style.css';
 
 type PaginationProps = {
-  count: number;
+  count: number | null;
   itemsLimit: number;
   currentPage: number;
-  changePage: (page: number) => void;
+  changePage: (page: number) => Promise<void>;
 };
 
 const Pagination: React.FC<PaginationProps> = ({
@@ -18,7 +18,12 @@ const Pagination: React.FC<PaginationProps> = ({
   const [totalPages, setTotalPages] = useState<number | null>(null);
 
   useEffect(() => {
-    const maxPages = Math.ceil(count / itemsLimit);
+    let maxPages: number | undefined;
+
+    if (count) {
+      maxPages = Math.ceil(count / itemsLimit);
+    }
+
     if (maxPages) {
       setTotalPages(maxPages);
       setAllPages(
