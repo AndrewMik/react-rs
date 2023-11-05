@@ -10,7 +10,7 @@ type SearchResultsProps = {
   currentPage: number;
   count: number | null;
   itemsLimit: number;
-  changePage: (page: number) => Promise<void>;
+  changePage: (page: number) => void;
 };
 
 const SearchResults: React.FC<SearchResultsProps> = ({

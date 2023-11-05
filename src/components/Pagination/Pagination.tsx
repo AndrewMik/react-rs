@@ -5,7 +5,7 @@ type PaginationProps = {
   count: number | null;
   itemsLimit: number;
   currentPage: number;
-  changePage: (page: number) => Promise<void>;
+  changePage: (page: number) => void;
 };
 
 const Pagination: React.FC<PaginationProps> = ({

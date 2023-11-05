@@ -1,6 +1,6 @@
 .search {
   background-color: #d7bf77;
-  height: 20vh;
+  min-height: 25vh;
   display: flex;
   justify-content: center;
   align-items: center;

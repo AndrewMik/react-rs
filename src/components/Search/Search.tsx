@@ -5,16 +5,12 @@ import { searchCharacters } from '../../api/searchCharacters';
 import { Character } from '../Characters/Characters';
 import SearchSection from '../SearchSection/SearchSection';
 import { useSearchParams } from 'react-router-dom';
+import { ItemsLimit } from '../../types/enum';
 
 type SearchCharactersResponse = {
   results: Character[];
   count: number;
 };
-
-enum ItemsLimit {
-  TenItemsPerPage = 10,
-  FiveItemsPerPage = 5,
-}
 
 const FIRST_PAGE = 1;
 
@@ -25,23 +21,60 @@ const Search: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState<number>(FIRST_PAGE);
   const [count, setCount] = useState<number | null>(null);
-  const [itemsLimit] = useState<number>(ItemsLimit.TenItemsPerPage);
+  const [itemsLimit, setItemsLimit] = useState<number>(
+    ItemsLimit.TenItemsPerPage
+  );
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const getSearchResults = async (searchTerm: string, pageQuery?: number) => {
+  const getSearchResults = async (
+    searchTerm: string,
+    pageQuery: number = FIRST_PAGE,
+    changedLimit?: ItemsLimit
+  ) => {
     setLoading(true);
+    
     try {
-      const response: SearchCharactersResponse = await searchCharacters(
-        searchTerm,
-        pageQuery
-      );
+      let response: SearchCharactersResponse;
+      if (
+        changedLimit ||
+        changedLimit === ItemsLimit.FiveItemsPerPage ||
+        (!changedLimit && itemsLimit === ItemsLimit.FiveItemsPerPage)
+      ) {
+        if (changedLimit) {
+          response = await searchCharacters(searchTerm, FIRST_PAGE);
+          setSearchResults(response.results.slice(0, changedLimit));
+        } else {
+          response = await searchCharacters(
+            searchTerm,
+            Math.ceil(pageQuery / 2)
+          );
 
-      setSearchResults(response.results);
+          pageQuery % 2
+            ? setSearchResults(
+                response.results.slice(0, changedLimit ?? itemsLimit)
+              )
+            : setSearchResults(
+                response.results.slice(changedLimit ?? itemsLimit)
+              );
+        }
+      } else {
+        response = await searchCharacters(searchTerm, pageQuery);
+        setSearchResults(response.results);
+      }
+
       setCount(response.count);
 
-      setCurrentPage(pageQuery ?? FIRST_PAGE);
-      setSearchParams(`page=${pageQuery ?? FIRST_PAGE}`);
+      if (changedLimit) {
+        setItemsLimit(changedLimit);
+        setCurrentPage(FIRST_PAGE);
+      } else {
+        setCurrentPage(pageQuery ?? FIRST_PAGE);
+      }
+
+      setSearchParams(
+        `page=${pageQuery ?? FIRST_PAGE}&limit=${changedLimit ?? itemsLimit}`
+      );
     } catch (error) {
       console.log(error);
     } finally {
@@ -76,7 +109,14 @@ const Search: React.FC = () => {
     getSearchResults(userSearchTerm);
   };
 
-  const changePage = async (page: number): Promise<void> => {
+  const handleItemsPerPageChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setItemsLimit(+event.target.value);
+    getSearchResults(searchString, currentPage, +event.target.value);
+  };
+
+  const changePage = (page: number): void => {
     if (currentPage !== page) getSearchResults(searchString, page);
   };
 
@@ -86,6 +126,8 @@ const Search: React.FC = () => {
         userInputString={userInputString}
         setUserInputString={setUserInputString}
         handleSearch={handleSearch}
+        setItemsLimit={setItemsLimit}
+        handleItemsPerPageChange={handleItemsPerPageChange}
       />
       <SearchResults
         searchResults={searchResults}
