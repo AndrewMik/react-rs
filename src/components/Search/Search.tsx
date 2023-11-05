@@ -4,6 +4,7 @@ import SearchResults from '../SearchResults/SearchResults';
 import { searchCharacters } from '../../api/searchCharacters';
 import { Character } from '../Characters/Characters';
 import SearchSection from '../SearchSection/SearchSection';
+import { useSearchParams } from 'react-router-dom';
 
 type SearchCharactersResponse = {
   results: Character[];
@@ -25,6 +26,8 @@ const Search: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(FIRST_PAGE);
   const [count, setCount] = useState<number | null>(null);
   const [itemsLimit] = useState<number>(ItemsLimit.TenItemsPerPage);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const getSearchResults = async (searchTerm: string, pageQuery?: number) => {
     setLoading(true);
@@ -36,6 +39,9 @@ const Search: React.FC = () => {
 
       setSearchResults(response.results);
       setCount(response.count);
+
+      setCurrentPage(pageQuery ?? FIRST_PAGE);
+      setSearchParams(`page=${pageQuery ?? FIRST_PAGE}`)
     } catch (error) {
       console.log(error);
     } finally {
@@ -64,7 +70,6 @@ const Search: React.FC = () => {
 
     if (searchString === userSearchTerm) return;
 
-    setCurrentPage(FIRST_PAGE);
     setSearchString(userSearchTerm);
     localStorage.setItem('searchString', userSearchTerm);
 
@@ -72,11 +77,7 @@ const Search: React.FC = () => {
   };
 
   const changePage = async (page: number): Promise<void> => {
-    if (currentPage === page) return;
-
-    setCurrentPage(page);
-
-    getSearchResults(searchString, page);
+    if (currentPage !== page) getSearchResults(searchString, page);
   };
 
   return (
