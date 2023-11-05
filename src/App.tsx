@@ -25,7 +25,6 @@ const router = createBrowserRouter(
         }}
         errorElement={<ErrorBoundary />}
       ></Route>
-      <Route path="*" element={<ErrorBoundary />}></Route>
     </Route>
   )
 );
