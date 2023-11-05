@@ -1,31 +1,36 @@
-import { useNavigation } from 'react-router';
+import { useNavigate, useNavigation } from 'react-router';
 import './style.css';
 import CharacterDescription from '../CharacterDescription/CharacterDescription';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 import { useEffect, useState } from 'react';
+import { Route } from '../../routes';
+import { useSearchParams } from 'react-router-dom';
 
 const Details: React.FC = () => {
   const [isVisible, setIsVisible] = useState<boolean>(true);
   const navigation = useNavigation();
+  const navigate = useNavigate();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     setIsVisible(true);
   }, [navigation]);
 
+  const closeHandler = () => {
+    setIsVisible(false);
+    navigate(Route.Home);
+    setSearchParams(localStorage.getItem('searchParams') || '');
+  };
+
   return (
     <>
       {isVisible && (
         <>
-          <div
-            className="details-left-side"
-            onClick={() => setIsVisible(false)}
-          />
+          <div className="details-left-side" onClick={closeHandler} />
           <section className="details">
             <div className="description-container">
-              <button
-                className="close-description"
-                onClick={() => setIsVisible(false)}
-              >
+              <button className="close-description" onClick={closeHandler}>
                 x
               </button>
               {navigation.state === 'loading' ? (

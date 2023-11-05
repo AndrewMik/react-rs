@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useSearchParams } from 'react-router-dom';
 
 type CharactersProps = {
   characters: Character[];
@@ -22,6 +22,8 @@ const getCharacterId = (url: string) => {
 };
 
 const Characters: React.FC<CharactersProps> = ({ characters }) => {
+  const [searchParams] = useSearchParams();
+
   return (
     <ul className="cards">
       {characters?.length > 0 ? (
@@ -29,6 +31,9 @@ const Characters: React.FC<CharactersProps> = ({ characters }) => {
           <NavLink
             to={`${getCharacterId(character.url)}`}
             key={getCharacterId(character.url)}
+            onClick={() =>
+              localStorage.setItem('searchParams', searchParams.toString())
+            }
           >
             <div className="card-container">
               <div key={character.name} className="card">

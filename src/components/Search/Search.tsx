@@ -4,7 +4,7 @@ import SearchResults from '../SearchResults/SearchResults';
 import { searchCharacters } from '../../api/searchCharacters';
 import { Character } from '../Characters/Characters';
 import SearchSection from '../SearchSection/SearchSection';
-import { Outlet, redirect, useSearchParams } from 'react-router-dom';
+import { Outlet, useNavigate, useSearchParams } from 'react-router-dom';
 import { ItemsLimit } from '../../types/enum';
 import { Route } from '../../routes';
 
@@ -27,6 +27,7 @@ const Search: React.FC = () => {
   );
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const getSearchResults = async (
     searchTerm: string,
@@ -120,8 +121,7 @@ const Search: React.FC = () => {
   const handleItemsPerPageChange = (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
-    redirect(Route.Home);
-    setSearchParams('');
+    navigate(Route.Home);
     setItemsLimit(+event.target.value);
     getSearchResults(searchString, currentPage, +event.target.value);
   };
