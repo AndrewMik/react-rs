@@ -8,20 +8,28 @@
 }
 
 .search-results {
-  margin: 5rem 0 1rem;
+  margin: 2rem 0 1rem;
 }
 
 .character-name {
   color: white;
 }
 
+.details .character-name {
+  color: #442f12;
+}
+
 .cards {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 20px;
+  gap: 3rem;
 }
 
 .card {
-  width: 300px;
+  width: 250px;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

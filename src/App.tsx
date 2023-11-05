@@ -7,6 +7,8 @@ import {
   RouterProvider,
 } from 'react-router-dom';
 import { Route as RoutePath } from './routes';
+import Details from './components/Details/Details';
+import { getCharacter } from './api/getCharacter';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -14,7 +16,15 @@ const router = createBrowserRouter(
       path={RoutePath.Home}
       element={<Search />}
       errorElement={<ErrorBoundary />}
-    />
+    >
+      <Route
+        path=":id"
+        element={<Details />}
+        loader={async ({ params }) => {
+          return getCharacter(params);
+        }}
+      ></Route>
+    </Route>
   )
 );
 

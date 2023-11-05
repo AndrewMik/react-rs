@@ -1,4 +1,9 @@
-export async function searchCharacters(searchString?: string, page?: number) {
+import { SearchCharactersResponse } from '../components/Search/Search';
+
+export async function searchCharacters(
+  searchString?: string,
+  page?: number
+): Promise<SearchCharactersResponse | null> {
   try {
     const query = buildQueryString(searchString, page);
 
@@ -10,7 +15,7 @@ export async function searchCharacters(searchString?: string, page?: number) {
     return data;
   } catch (error) {
     console.error('An error occurred:', error);
-    return [];
+    return null;
   }
 }
 

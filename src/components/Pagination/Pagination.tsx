@@ -73,7 +73,10 @@ const Pagination: React.FC<PaginationProps> = ({
               {page}
             </button>
           ) : page - 1 === 1 || page + 1 === totalPages ? (
-            <button className="pagination-button pagination-button_out-of-range-pages">
+            <button
+              className="pagination-button pagination-button_out-of-range-pages"
+              key={`page-${page}`}
+            >
               ...
             </button>
           ) : null;

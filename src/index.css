@@ -36,7 +36,7 @@ button:active {
 }
 
 button:active {
-  opacity: .5;
+  opacity: 0.5;
 }
 
 input {
@@ -49,4 +49,9 @@ input {
   padding: 7px 0;
   background: transparent;
   transition: border-color 0.2s;
+}
+
+a {
+  color: #d7bf77;
+  text-decoration: none;
 }

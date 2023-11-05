@@ -4,10 +4,10 @@ import SearchResults from '../SearchResults/SearchResults';
 import { searchCharacters } from '../../api/searchCharacters';
 import { Character } from '../Characters/Characters';
 import SearchSection from '../SearchSection/SearchSection';
-import { useSearchParams } from 'react-router-dom';
+import { Outlet, useSearchParams } from 'react-router-dom';
 import { ItemsLimit } from '../../types/enum';
 
-type SearchCharactersResponse = {
+export type SearchCharactersResponse = {
   results: Character[];
   count: number;
 };
@@ -33,9 +33,9 @@ const Search: React.FC = () => {
     changedLimit?: ItemsLimit
   ) => {
     setLoading(true);
-    
+
     try {
-      let response: SearchCharactersResponse;
+      let response: SearchCharactersResponse | null;
       if (
         changedLimit ||
         changedLimit === ItemsLimit.FiveItemsPerPage ||
@@ -43,27 +43,34 @@ const Search: React.FC = () => {
       ) {
         if (changedLimit) {
           response = await searchCharacters(searchTerm, FIRST_PAGE);
-          setSearchResults(response.results.slice(0, changedLimit));
+          if (response) {
+            setSearchResults(response.results.slice(0, changedLimit));
+          }
         } else {
           response = await searchCharacters(
             searchTerm,
             Math.ceil(pageQuery / 2)
           );
 
-          pageQuery % 2
-            ? setSearchResults(
-                response.results.slice(0, changedLimit ?? itemsLimit)
-              )
-            : setSearchResults(
-                response.results.slice(changedLimit ?? itemsLimit)
-              );
+          if (response) {
+            pageQuery % 2
+              ? setSearchResults(
+                  response.results.slice(0, changedLimit ?? itemsLimit)
+                )
+              : setSearchResults(
+                  response.results.slice(changedLimit ?? itemsLimit)
+                );
+          }
         }
       } else {
         response = await searchCharacters(searchTerm, pageQuery);
-        setSearchResults(response.results);
+        if (response) {
+          setSearchResults(response.results);
+        }
       }
-
-      setCount(response.count);
+      if (response) {
+        setCount(response.count);
+      }
 
       if (changedLimit) {
         setItemsLimit(changedLimit);
@@ -137,6 +144,7 @@ const Search: React.FC = () => {
         loading={loading}
         changePage={changePage}
       />
+      <Outlet />
     </>
   );
 };

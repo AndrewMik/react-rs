@@ -1,3 +1,5 @@
+import { NavLink } from 'react-router-dom';
+
 type CharactersProps = {
   characters: Character[];
 };
@@ -11,6 +13,12 @@ export type Character = {
   eye_color: string;
   birth_year: string;
   gender: string;
+  url: string;
+};
+
+const getCharacterId = (url: string) => {
+  const arr = url.split('/');
+  return arr[arr.length - 2];
 };
 
 const Characters: React.FC<CharactersProps> = ({ characters }) => {
@@ -18,23 +26,16 @@ const Characters: React.FC<CharactersProps> = ({ characters }) => {
     <ul className="cards">
       {characters?.length > 0 ? (
         characters.map((character: Character) => (
-          <li key={character.name} className="card">
-            <h3 className="character-name">{character.name}</h3>
-            <div className="description">
-              <div>Height: {character.height} cm</div>
-              <div>
-                Mass:{' '}
-                {character.mass !== 'unknown'
-                  ? character.mass + ' kg'
-                  : character.mass}{' '}
+          <NavLink
+            to={`${getCharacterId(character.url)}`}
+            key={getCharacterId(character.url)}
+          >
+            <div className="card-container">
+              <div key={character.name} className="card">
+                <h3 className="character-name">{character.name}</h3>
               </div>
-              <div>Hair color: {character.hair_color}</div>
-              <div>Skin color: {character.skin_color}</div>
-              <div>Eye color: {character.eye_color}</div>
-              <div>Birth year: {character.birth_year}</div>
-              <div>Gender: {character.gender}</div>
             </div>
-          </li>
+          </NavLink>
         ))
       ) : (
         <h3>No results were found.</h3>
