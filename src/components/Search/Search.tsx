@@ -41,7 +41,7 @@ const Search: React.FC = () => {
       setCount(response.count);
 
       setCurrentPage(pageQuery ?? FIRST_PAGE);
-      setSearchParams(`page=${pageQuery ?? FIRST_PAGE}`)
+      setSearchParams(`page=${pageQuery ?? FIRST_PAGE}`);
     } catch (error) {
       console.log(error);
     } finally {
